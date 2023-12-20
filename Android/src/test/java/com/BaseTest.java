@@ -7,6 +7,7 @@ import java.net.URISyntaxException;
 import java.net.URL;
 
 import org.openqa.selenium.Capabilities;
+import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
@@ -81,5 +82,20 @@ public class BaseTest extends ConfigReader{
         URL url = uri.toURL();
 
         driver = new AndroidDriver(url, (Capabilities) capabilities);
+    }
+
+    /**
+     * Tears down the test environment.
+     * 
+     * Waits for 3 seconds to complete any remaining operations, then quits the driver 
+     * and closes the Appium service. This ensures that the application and the server 
+     * are properly shut down after tests.
+     */
+    @Test
+    @AfterClass
+    public void tearDown() throws InterruptedException{
+        Thread.sleep(3000);
+        driver.quit();
+        service.close();
     }
 }
