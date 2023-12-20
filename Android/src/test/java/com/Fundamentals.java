@@ -1,5 +1,5 @@
 package com;
 
-public class Fundamentals {
+public class Fundamentals extends BaseTest{
 
 }
