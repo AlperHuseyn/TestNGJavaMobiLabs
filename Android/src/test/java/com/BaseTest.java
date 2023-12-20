@@ -16,39 +16,68 @@ import io.appium.java_client.service.local.AppiumDriverLocalService;
 import io.appium.java_client.service.local.AppiumServiceBuilder;
 
 public class BaseTest extends ConfigReader{
-    /**
-     * @throws MalformedURLException
-     * @throws URISyntaxException
-     */
     ConfigReader config = new ConfigReader();
 
     public AndroidDriver driver;
     public AppiumDriverLocalService service;
 
+     /**
+     * Initializes the AndroidDriver with Appium.
+     * 
+     * This method sets up the Appium service and the Android driver with the
+     * required capabilities. It reads configuration properties such as the
+     * path to Appium JavaScript file, device name, APK path, and Appium server URL.
+     *
+     * @throws MalformedURLException if the constructed URL is not formatted correctly.
+     * @throws URISyntaxException    if the URI syntax is incorrect.
+     */
     @Test
     @BeforeClass
     public void initialiseAndroidDriverWithAppium() throws MalformedURLException, URISyntaxException{
-        String appium_js_path_string = config.getProperty("appium_js_path");
-        File appium_js_path = new File(appium_js_path_string);
-        String appium_IP_adress = config.getProperty("appium_ip_address");
-        int appium_port = 4723;
-        
+        try{
+            setupAppiumService();
+            setupAndroidDriver();
+        } catch (MalformedURLException | URISyntaxException err) {
+            System.err.println("Error initializing Appium service or Android driver: " + err.getMessage());
+            throw err;
+        }
+    }
+
+    /**
+     * Sets up and starts the Appium service.
+     *
+     * @throws MalformedURLException if the Appium JavaScript file path is incorrect.
+     */
+    private void setupAppiumService(){
+        String appiumJsPathString = config.getProperty("appiumJsPath");
+        File appiumJsPath = new File(appiumJsPathString);
+        String appiumIpAddress = "127.0.0.1";
+        int appiumPort = 4723;
+
         service = new AppiumServiceBuilder()
-            .withAppiumJS(appium_js_path)
-            .withIPAddress(appium_IP_adress)
-            .usingPort(appium_port)
-            .build();
+                .withAppiumJS(appiumJsPath)
+                .withIPAddress(appiumIpAddress)
+                .usingPort(appiumPort)
+                .build();
         service.start();
-        
-        String deviceName = config.getProperty("device_name");
-        String path_to_APK = config.getProperty("path_to_apk");
+    }
+
+     /**
+     * Configures and creates the AndroidDriver instance.
+     *
+     * @throws MalformedURLException if the URL for the Appium server is malformed.
+     * @throws URISyntaxException    if the URI syntax for the Appium server is incorrect.
+     */
+    private void setupAndroidDriver() throws URISyntaxException, MalformedURLException{
+        String deviceName = config.getProperty("deviceName");
+        String path2APK = config.getProperty("path2APK");
         
         UiAutomator2Options capabilities = new UiAutomator2Options();
         capabilities.setDeviceName(deviceName);
-        capabilities.setApp(path_to_APK);
+        capabilities.setApp(path2APK);
 
-        String uri_string = config.getProperty("appium_server_url");
-        URI uri = new URI(uri_string);
+        String uriString = config.getProperty("appiumServerUrl");
+        URI uri = new URI(uriString);
         URL url = uri.toURL();
 
         driver = new AndroidDriver(url, (Capabilities) capabilities);
