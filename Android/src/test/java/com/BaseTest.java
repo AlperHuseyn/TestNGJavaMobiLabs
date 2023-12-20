@@ -15,11 +15,12 @@ import io.appium.java_client.android.options.UiAutomator2Options;
 import io.appium.java_client.service.local.AppiumDriverLocalService;
 import io.appium.java_client.service.local.AppiumServiceBuilder;
 
-public class BaseTest {
+public class BaseTest extends ConfigReader{
     /**
      * @throws MalformedURLException
      * @throws URISyntaxException
      */
+    ConfigReader config = new ConfigReader();
 
     public AndroidDriver driver;
     public AppiumDriverLocalService service;
@@ -27,8 +28,9 @@ public class BaseTest {
     @Test
     @BeforeClass
     public void initialiseAndroidDriverWithAppium() throws MalformedURLException, URISyntaxException{
-        File appium_js_path = new File("//home//machoalpha//.nvm//versions//node//v21.4.0//lib//node_modules//appium//build//lib//main.js");
-        String appium_IP_adress = "127.0.0.1";
+        String appium_js_path_string = config.getProperty("appium_js_path");
+        File appium_js_path = new File(appium_js_path_string);
+        String appium_IP_adress = config.getProperty("appium_ip_address");
         int appium_port = 4723;
         
         service = new AppiumServiceBuilder()
@@ -38,14 +40,15 @@ public class BaseTest {
             .build();
         service.start();
         
-        String deviceName = "SamsungS8";
-        String path_to_APK = "//home//machoalpha//Documents//APKs//com.homewhiz.global-automation-v2.9.50-231207.apk";
+        String deviceName = config.getProperty("device_name");
+        String path_to_APK = config.getProperty("path_to_apk");
         
         UiAutomator2Options capabilities = new UiAutomator2Options();
         capabilities.setDeviceName(deviceName);
         capabilities.setApp(path_to_APK);
 
-        URI uri = new URI("http://127.0.0.1:4723");
+        String uri_string = config.getProperty("appium_server_url");
+        URI uri = new URI(uri_string);
         URL url = uri.toURL();
 
         driver = new AndroidDriver(url, (Capabilities) capabilities);
