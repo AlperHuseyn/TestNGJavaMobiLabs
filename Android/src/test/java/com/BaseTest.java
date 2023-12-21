@@ -94,7 +94,7 @@ public class BaseTest extends ConfigReader{
     @Test
     @AfterClass
     public void tearDown() throws InterruptedException{
-        Thread.sleep(3000);
+        Thread.sleep(5000);
         driver.quit();
         service.stop();
     }
