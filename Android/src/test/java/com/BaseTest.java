@@ -88,7 +88,7 @@ public class BaseTest extends ConfigReader{
      * Tears down the test environment.
      * 
      * Waits for 3 seconds to complete any remaining operations, then quits the driver 
-     * and closes the Appium service. This ensures that the application and the server 
+     * and stops the Appium service. This ensures that the application and the server 
      * are properly shut down after tests.
      */
     @Test
@@ -96,6 +96,6 @@ public class BaseTest extends ConfigReader{
     public void tearDown() throws InterruptedException{
         Thread.sleep(3000);
         driver.quit();
-        service.close();
+        service.stop();
     }
 }
