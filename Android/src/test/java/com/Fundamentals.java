@@ -28,8 +28,26 @@ public class Fundamentals extends BaseTest{
         wait.until(ExpectedConditions.visibilityOfElementLocated(AppiumBy.id(config.getProperty("passwordLocator"))))
             .sendKeys(config.getProperty("PASSWORD"));
         
-        // Submit login form by clicking login button
+        // Submit login form
         wait.until(ExpectedConditions.elementToBeClickable(AppiumBy.id(config.getProperty("loginButtonLocator"))))
             .click();
+    }
+
+    private boolean isDeviceAdded(){
+        // ...
+        return false;
+    }
+
+    private void removeDevice(){
+        // ...
+    }
+
+    @Test
+    public void addDevice(){
+        if(isDeviceAdded()){
+            removeDevice();
+        }
+
+        // ...
     }
 }
