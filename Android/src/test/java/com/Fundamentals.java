@@ -46,7 +46,7 @@ public class Fundamentals extends BaseTest{
      */
     private boolean isDeviceAdded(){
         try{
-            driver.findElement(AppiumBy.id("")));
+            driver.findElement(AppiumBy.id(""));
             return true;  // Element is found, return true
         } catch (NoSuchElementException err) {
             return false;  // Element not found, return false
