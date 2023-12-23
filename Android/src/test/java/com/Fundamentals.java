@@ -2,9 +2,14 @@ package com;
 
 import java.time.Duration;
 
+import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.remote.RemoteWebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.annotations.Test;
+
+import com.google.common.collect.ImmutableMap;
 
 import io.appium.java_client.AppiumBy;
 
@@ -38,8 +43,17 @@ public class Fundamentals extends BaseTest{
         return false;
     }
 
+    /**
+     * Removes a device by performing a long click gesture.
+     */
     private void removeDevice(){
-        // ...
+        // Locate the element
+        WebElement element = driver.findElement(AppiumBy.id(""));  // HERE
+        // Execute a long click gesture on the element using the JavascriptExecutor interface.
+        ((JavascriptExecutor) driver).executeScript("mobile: longClickGesture", ImmutableMap.of(
+            "elementId", ((RemoteWebElement) element).getId(),
+            "duration", 2000
+        ));
     }
 
     @Test
