@@ -1,6 +1,7 @@
 package com;
 
 import java.time.Duration;
+import java.util.NoSuchElementException;
 
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebElement;
@@ -38,9 +39,18 @@ public class Fundamentals extends BaseTest{
             .click();
     }
 
+    /**
+     * Checks if an element is present on the web page.
+     * 
+     * @return true if the element is present, false otherwise.
+     */
     private boolean isDeviceAdded(){
-        // ...
-        return false;
+        try{
+            driver.findElement(AppiumBy.id("")));
+            return true;  // Element is found, return true
+        } catch (NoSuchElementException err) {
+            return false;  // Element not found, return false
+        }
     }
 
     /**
