@@ -81,5 +81,7 @@ public class Fundamentals extends BaseTest{
             driver.findElement(AppiumBy.id(config.getProperty("allowButtonLocator"))).click();
         }
 
+        // ...
+
     }
 }
