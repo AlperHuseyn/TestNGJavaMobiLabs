@@ -21,7 +21,7 @@ public class Fundamentals extends BaseTest{
      * Test method to log into the application.
      * Configuration parameters are retrieved from a properties file.
      */
-    @Test
+    @Test(priority = 1)
     public void loginApp(){
         // Ensure elements are visible and clickable before interaction.
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(15));
@@ -58,7 +58,7 @@ public class Fundamentals extends BaseTest{
      */
     private void removeDevice(){
         // Locate the element
-        WebElement element = driver.findElement(AppiumBy.id(config.getProperty("applianceNameLocator")));  // HERE
+        WebElement element = driver.findElement(AppiumBy.id(config.getProperty("applianceNameLocator")));
         // Execute a long click gesture on the element using the JavascriptExecutor interface.
         ((JavascriptExecutor) driver).executeScript("mobile: longClickGesture", ImmutableMap.of(
             "elementId", ((RemoteWebElement) element).getId(),
@@ -67,12 +67,19 @@ public class Fundamentals extends BaseTest{
         // ...
     }
 
-    @Test
+    @Test(priority = 2, dependsOnMethods = "loginApp")
     public void addDevice(){
         if(isDeviceAdded()){
             removeDevice();
         }
 
-        // ...
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(15));
+        wait.until(ExpectedConditions.visibilityOfElementLocated(AppiumBy.xpath(config.getProperty("noDeviceAddedLocator"))));
+        driver.findElement(AppiumBy.xpath(config.getProperty("addDeviceButtonLocator"))).click();
+
+        if (!(driver.findElements(AppiumBy.id(config.getProperty("permissionMessageLocator")))).isEmpty()){
+            driver.findElement(AppiumBy.id(config.getProperty("allowButtonLocator"))).click();
+        }
+
     }
 }
