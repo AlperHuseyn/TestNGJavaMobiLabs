@@ -58,12 +58,13 @@ public class Fundamentals extends BaseTest{
      */
     private void removeDevice(){
         // Locate the element
-        WebElement element = driver.findElement(AppiumBy.id(""));  // HERE
+        WebElement element = driver.findElement(AppiumBy.id(config.getProperty("applianceNameLocator")));  // HERE
         // Execute a long click gesture on the element using the JavascriptExecutor interface.
         ((JavascriptExecutor) driver).executeScript("mobile: longClickGesture", ImmutableMap.of(
             "elementId", ((RemoteWebElement) element).getId(),
             "duration", 2000
         ));
+        // ...
     }
 
     @Test
