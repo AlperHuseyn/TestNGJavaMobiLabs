@@ -43,11 +43,9 @@ public class Fundamentals extends BaseTest{
      */
     private boolean isDeviceAdded(){
         try{
-            System.out.println("Attempting to find the element.");
             driver.findElement(AppiumBy.id(config.getProperty("applianceNameLocator")));
             return true;  // Element is found, return true
         } catch (NoSuchElementException err) {
-            System.out.println("Element not found." + err.getMessage());
             return false;  // Element not found, return false
         }
     }
@@ -65,10 +63,14 @@ public class Fundamentals extends BaseTest{
     }
 
     /**
-     * Adds a device to the account.
+     * Adds a device to the user's account.
+     * This method first checks if a device is already added using the isDeviceAdded method.
+     * If a device is found, it removes the existing device to ensure not to add same    device.
+     * The method then performs a series of steps to add a new device, handling potential UI changes and pop-ups.
      */
     @Test(priority = 2, dependsOnMethods = "loginApp")
     public void addDevice(){
+        // Check if a device is already added. If so, remove it.
         if(isDeviceAdded()){
             removeDevice();
         }
@@ -77,16 +79,19 @@ public class Fundamentals extends BaseTest{
 
         // Wait until "No Device Added" message is visiable
         wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath(config.getProperty("noDeviceAddedLocator"))));
-        // Click add dvice button
+        // Initiate the process of adding a new device by clicking the "Add Device" button.
         wait.until(ExpectedConditions.elementToBeClickable(AppiumBy.className(config.getProperty("addDeviceButtonLocator")))).click();
         
-        // Check if permission message is displayed and if so, click the "Allow" button
-        if (!(wait.until(ExpectedConditions.invisibilityOfElementLocated(AppiumBy.id("permissionMessageLocator"))))){
+        // Handle potential pop-ups
+        wait.until(ExpectedConditions.invisibilityOfElementWithText(AppiumBy.id("noDeviceAddedLocator"), "Henüz cihaz eklemediniz."));
+        boolean popUp = wait.until(ExpectedConditions.elementToBeClickable(AppiumBy.id(config.getProperty("allowButtonLocator")))).isDisplayed();
+        if (popUp){
+           // If a pop-up is present, click the "Allow" button to proceed.
            wait.until(ExpectedConditions.elementToBeClickable(AppiumBy.id(config.getProperty("allowButtonLocator"))))
                 .click();
         }
 
-        // Wait until the "Choose the Way" message is visible
+        // Proceed with the device addition process by selecting the type of device.
         wait.until(ExpectedConditions.visibilityOfElementLocated(AppiumBy.id(config.getProperty("chooseTheWayLocator"))));
         // Select "Kitchen Devices" and then "Fridge" from the available options
         wait.until(ExpectedConditions.elementToBeClickable(AppiumBy.id(config.getProperty("kitchenDevicesLocator"))))
@@ -94,9 +99,8 @@ public class Fundamentals extends BaseTest{
         wait.until(ExpectedConditions.elementToBeClickable(AppiumBy.id(config.getProperty("fridgeLocator"))))
             .click();
         
-        // Wait until the "Appliance Stock Number" text field is visible
-        wait.until(ExpectedConditions.visibilityOfElementLocated(AppiumBy.id(config.getProperty("applianceStockNumberTxtLocator"))));
         // Enter the SKU number into the "SKU Pin Entry
+        wait.until(ExpectedConditions.visibilityOfElementLocated(AppiumBy.id(config.getProperty("applianceStockNumberTxtLocator"))));
         wait.until(ExpectedConditions.elementToBeClickable(AppiumBy.id(config.getProperty("skuPinEntryLocator"))))
             .sendKeys(config.getProperty("SKU"));
     }
