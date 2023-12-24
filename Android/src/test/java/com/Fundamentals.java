@@ -1,17 +1,13 @@
 package com;
 
 import java.time.Duration;
-import java.util.NoSuchElementException;
 
 import org.openqa.selenium.By;
-import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.remote.RemoteWebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.annotations.Test;
-
-import com.google.common.collect.ImmutableMap;
 
 import io.appium.java_client.AppiumBy;
 
@@ -51,7 +47,7 @@ public class Fundamentals extends BaseTest{
             driver.findElement(AppiumBy.id(config.getProperty("applianceNameLocator")));
             return true;  // Element is found, return true
         } catch (NoSuchElementException err) {
-            System.out.println("Element not found.");
+            System.out.println("Element not found." + err.getMessage());
             return false;  // Element not found, return false
         }
     }
@@ -73,9 +69,9 @@ public class Fundamentals extends BaseTest{
      */
     @Test(priority = 2, dependsOnMethods = "loginApp")
     public void addDevice(){
-        // if(isDeviceAdded()){
-        //     removeDevice();
-        // }
+        if(isDeviceAdded()){
+            removeDevice();
+        }
 
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(15));
 
@@ -85,7 +81,7 @@ public class Fundamentals extends BaseTest{
         wait.until(ExpectedConditions.elementToBeClickable(AppiumBy.className(config.getProperty("addDeviceButtonLocator")))).click();
         
         // Check if permission message is displayed and if so, click the "Allow" button
-        if (!(wait.until(ExpectedConditions.visibilityOfAllElementsLocatedBy(AppiumBy.id("permissionMessageLocator"))).isEmpty())){
+        if (!(driver.findElement(AppiumBy.id("permissionMessageLocator"))).isDisplayed()){
            wait.until(ExpectedConditions.elementToBeClickable(AppiumBy.id(config.getProperty("allowButtonLocator"))))
                 .click();
         }
