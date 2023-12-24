@@ -81,7 +81,7 @@ public class Fundamentals extends BaseTest{
         wait.until(ExpectedConditions.elementToBeClickable(AppiumBy.className(config.getProperty("addDeviceButtonLocator")))).click();
         
         // Check if permission message is displayed and if so, click the "Allow" button
-        if (!(driver.findElement(AppiumBy.id("permissionMessageLocator"))).isDisplayed()){
+        if (!(wait.until(ExpectedConditions.invisibilityOfElementLocated(AppiumBy.id("permissionMessageLocator"))))){
            wait.until(ExpectedConditions.elementToBeClickable(AppiumBy.id(config.getProperty("allowButtonLocator"))))
                 .click();
         }
