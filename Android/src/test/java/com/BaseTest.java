@@ -7,9 +7,14 @@ import java.net.URISyntaxException;
 import java.net.URL;
 
 import org.openqa.selenium.Capabilities;
+import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.remote.RemoteWebElement;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
+
+import com.google.common.collect.ImmutableMap;
 
 import io.appium.java_client.android.AndroidDriver;
 import io.appium.java_client.android.options.UiAutomator2Options;
@@ -82,6 +87,15 @@ public class BaseTest extends ConfigReader{
         URL url = uri.toURL();
 
         driver = new AndroidDriver(url, (Capabilities) capabilities);
+    }
+    /**
+     * Executes a long click gesture on the element using the JavascriptExecutor interface.
+     */
+    public void longPressAction(WebElement element){
+        ((JavascriptExecutor) driver).executeScript("mobile: longClickGesture", ImmutableMap.of(
+            "elementId", ((RemoteWebElement) element).getId(),
+            "duration", 2000
+        ));
     }
 
     /**
