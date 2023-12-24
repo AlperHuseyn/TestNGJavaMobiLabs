@@ -7,6 +7,7 @@ import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
+import org.testng.Assert;
 import org.testng.annotations.Test;
 
 import io.appium.java_client.AppiumBy;
@@ -99,9 +100,21 @@ public class Fundamentals extends BaseTest{
         wait.until(ExpectedConditions.elementToBeClickable(AppiumBy.id(config.getProperty("fridgeLocator"))))
             .click();
         
-        // Enter the SKU number into the "SKU Pin Entry
+        // Enter the SKU number into the "SKU Pin Entry, then submit the form to proceed
         wait.until(ExpectedConditions.visibilityOfElementLocated(AppiumBy.id(config.getProperty("applianceStockNumberTxtLocator"))));
         wait.until(ExpectedConditions.elementToBeClickable(AppiumBy.id(config.getProperty("skuPinEntryLocator"))))
             .sendKeys(config.getProperty("SKU"));
+        wait.until(ExpectedConditions.elementToBeClickable(AppiumBy.id(config.getProperty("useSkuPinButtonLocator"))))
+            .click();
+
+        // Handle "instructions for onboarding" pop-up
+        wait.until(ExpectedConditions.elementToBeClickable(AppiumBy.id(config.getProperty("proceedButtonLocator"))))
+            .click();
+        
+        // Assertion: Check if the "Wireless" button text is displayed, indicating proceeding next page successfully
+        Assert.assertTrue(driver.findElement(AppiumBy.id(config.getProperty("wirelessBottonTxtLocator"))).isDisplayed());
+        // Continue with the next steps
+        wait.until(ExpectedConditions.elementToBeClickable(AppiumBy.id(config.getProperty("nextButtonLocator"))))
+            .click();
     }
 }
