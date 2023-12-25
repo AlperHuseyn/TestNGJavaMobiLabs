@@ -38,7 +38,7 @@ public class Onboarding extends BaseTest{
     }
 
     /**
-     * Checks if an element is present on the web page.
+     * Checks if an element is present on the account.
      * 
      * @return true if the element is present, false otherwise.
      */
@@ -96,6 +96,26 @@ public class Onboarding extends BaseTest{
     }
 
     /**
+     * This method handles the access the device's location request pop-up 
+     * that may appear during the device addition process.
+     * 
+     */
+    private void handlePermissionPopUp(){
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(15));
+
+        // Wait for any transitional elements to disappear to ensure we are dealing with the current UI state.
+        wait.until(ExpectedConditions.invisibilityOfElementWithText(AppiumBy.id("noDeviceAddedLocator"), "Henüz cihaz eklemediniz."));
+
+        // Check if the permission pop-up is displayed.
+        boolean popUp = wait.until(ExpectedConditions.elementToBeClickable(AppiumBy.id(config.getProperty("allowButtonLocator")))).isDisplayed();
+        if (popUp){
+           // If the pop-up is present, click the "Allow" button to grant permission and proceed.
+           wait.until(ExpectedConditions.elementToBeClickable(AppiumBy.id(config.getProperty("allowButtonLocator"))))
+                .click();
+        }
+    }
+
+    /**
      * Adds a device to the user's account.
      * This method first checks if a device is already added using the isDeviceAdded method.
      * If a device is found, it removes the existing device to ensure not to add same device.
@@ -116,14 +136,8 @@ public class Onboarding extends BaseTest{
         // Initiate the process of adding a new device by clicking the "Add Device" button.
         wait.until(ExpectedConditions.elementToBeClickable(AppiumBy.className(config.getProperty("addDeviceButtonLocator")))).click();
         
-        // Handle potential pop-ups
-        wait.until(ExpectedConditions.invisibilityOfElementWithText(AppiumBy.id("noDeviceAddedLocator"), "Henüz cihaz eklemediniz."));
-        boolean popUp = wait.until(ExpectedConditions.elementToBeClickable(AppiumBy.id(config.getProperty("allowButtonLocator")))).isDisplayed();
-        if (popUp){
-           // If a pop-up is present, click the "Allow" button to proceed.
-           wait.until(ExpectedConditions.elementToBeClickable(AppiumBy.id(config.getProperty("allowButtonLocator"))))
-                .click();
-        }
+        // Handle permission pop-up
+        handlePermissionPopUp();
 
         // Proceed with the device addition process by selecting the type of device.
         wait.until(ExpectedConditions.visibilityOfElementLocated(AppiumBy.id(config.getProperty("chooseTheWayLocator"))));
