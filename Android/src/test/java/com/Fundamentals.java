@@ -47,9 +47,11 @@ public class Fundamentals extends BaseTest{
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(15));
 
         try{
+            System.out.println("Attempting to find the element.");
             wait.until(ExpectedConditions.visibilityOfElementLocated(AppiumBy.id(config.getProperty("applianceNameLocator"))));
             return true;  // Element is found, return true
         } catch (NoSuchElementException err) {
+            System.out.println("Element not found." + err.getMessage());
             return false;  // Element not found, return false
         }
     }
