@@ -98,7 +98,7 @@ public class Fundamentals extends BaseTest{
     /**
      * Adds a device to the user's account.
      * This method first checks if a device is already added using the isDeviceAdded method.
-     * If a device is found, it removes the existing device to ensure not to add same    device.
+     * If a device is found, it removes the existing device to ensure not to add same device.
      * The method then performs a series of steps to add a new device, handling potential UI changes and pop-ups.
      */
     @Test(priority = 2, dependsOnMethods = "loginApp")
