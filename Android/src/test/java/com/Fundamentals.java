@@ -3,7 +3,7 @@ package com;
 import java.time.Duration;
 
 import org.openqa.selenium.By;
-import org.openqa.selenium.NoSuchElementException;
+import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
@@ -51,8 +51,8 @@ public class Fundamentals extends BaseTest{
             wait.until(ExpectedConditions.visibilityOfElementLocated(AppiumBy.id(config.getProperty("applianceNameLocator"))));
             System.out.println("Device element found.");
             return true;  // Element is found, return true
-        } catch (NoSuchElementException err) {
-            System.out.println("Device element not found." + err.getMessage());
+        } catch (TimeoutException err) {
+            System.out.println("Device element not found." + "\n" + err.getMessage());
             return false;  // Element not found, return false
         }
     }
