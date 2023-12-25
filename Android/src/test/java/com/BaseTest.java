@@ -107,8 +107,8 @@ public class BaseTest extends ConfigReader{
      * @param text The text of the element to scroll to. This is the visible text associated 
      *             with a UI element in the app.
      */
-    public void scrollTextIntoViewAction(@NonNull String text){
-        driver.findElement(AppiumBy.androidUIAutomator("new UiScrollable(new UiSelector()).scrollTextIntoView(new UiSelector().text('" + text + "'));"));
+    public void scrollIntoViewAction(@NonNull String text){
+        driver.findElement(AppiumBy.androidUIAutomator("new UiScrollable(new UiSelector()).scrollIntoView(text(\"" + text + "\"));"));
     }
 
     /**
