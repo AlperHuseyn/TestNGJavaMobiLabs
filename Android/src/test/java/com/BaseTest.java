@@ -96,7 +96,7 @@ public class BaseTest extends ConfigReader{
     public void longPressAction(WebElement element){
         ((JavascriptExecutor) driver).executeScript("mobile: longClickGesture", ImmutableMap.of(
             "elementId", ((RemoteWebElement) element).getId(),
-            "duration", 2000
+            "duration", 1000
         ));
     }
 
