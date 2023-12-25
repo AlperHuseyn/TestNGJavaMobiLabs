@@ -31,9 +31,6 @@ public class BaseTest extends ConfigReader{
     public AndroidDriver driver;
     public AppiumDriverLocalService service;
 
-    // Ensure elements are visible and clickable before interaction.
-    WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(15));
-
      /**
      * Initializes the AndroidDriver with Appium.
      * 
