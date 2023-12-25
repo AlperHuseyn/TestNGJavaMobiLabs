@@ -49,10 +49,10 @@ public class Fundamentals extends BaseTest{
         try{
             System.out.println("Attempting to find the element.");
             wait.until(ExpectedConditions.visibilityOfElementLocated(AppiumBy.id(config.getProperty("applianceNameLocator"))));
-            System.out.println("Element found.");
+            System.out.println("Device element found.");
             return true;  // Element is found, return true
         } catch (NoSuchElementException err) {
-            System.out.println("Element not found." + err.getMessage());
+            System.out.println("Device element not found." + err.getMessage());
             return false;  // Element not found, return false
         }
     }
