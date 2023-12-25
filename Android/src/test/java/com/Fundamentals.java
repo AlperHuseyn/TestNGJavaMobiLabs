@@ -65,12 +65,30 @@ public class Fundamentals extends BaseTest{
         // Execute long press
         longPressAction(element);
 
-        Assert.assertTrue(driver.findElement(AppiumBy.xpath("removeDeviceTxtLocator")).isDisplayed());
-        
-        wait.until(ExpectedConditions.elementToBeClickable(AppiumBy.id("removeDeviceButtonLocator")))
+        // After long press, re-fetch the remove button to avoid stale reference
+        WebElement removeButton = wait.until(ExpectedConditions.presenceOfElementLocated(AppiumBy.id(config.getProperty("removeDeviceButtonLocator"))));
+
+        // Log the state of the remove button
+        boolean isRemoveButtonDisplayed = removeButton.isDisplayed();
+        boolean isRemoveButtonEnabled = removeButton.isEnabled();
+
+        System.out.println("Remove button is displayed: " + isRemoveButtonDisplayed);
+        System.out.println("Remove button is enabled: " + isRemoveButtonEnabled);
+
+        wait.until(ExpectedConditions.elementToBeClickable(removeButton))
             .click();
-        System.out.println("Remove button is clickable");
-        wait.until(ExpectedConditions.elementToBeClickable(AppiumBy.id("deleteButtonLocator")))
+
+        // Handle confirmation pop-up
+        WebElement deleteConfirmationButton = wait.until(ExpectedConditions.presenceOfElementLocated(AppiumBy.id(config.getProperty("deleteConfirmationButtonLocator"))));
+
+        // Log the state of the delete confirmation button
+        boolean isDeleteConfirmationButtonDisplayed = deleteConfirmationButton.isDisplayed();
+        boolean isDeleteConfirmationButtonEnabled = deleteConfirmationButton.isEnabled();
+
+        System.out.println("Delete confirmation button is displayed: " + isDeleteConfirmationButtonDisplayed);
+        System.out.println("Delete confirmation button is enabled: " + isDeleteConfirmationButtonEnabled);
+
+        wait.until(ExpectedConditions.elementToBeClickable(deleteConfirmationButton))
             .click();
     }
 
