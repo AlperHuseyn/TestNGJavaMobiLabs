@@ -43,7 +43,6 @@ public class Onboarding extends BaseTest{
      * @return true if the element is present, false otherwise.
      */
     private boolean isDeviceAdded(){
-        // Ensure element is visible before interaction.
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(15));
 
         try{
@@ -61,8 +60,8 @@ public class Onboarding extends BaseTest{
      * Removes a device by performing a long click gesture.
      */
     private void removeDevice(){
-        // Ensure elements are visible and clickable before interaction.
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(15));
+
         // Locate the element
         WebElement element = driver.findElement(AppiumBy.id(config.getProperty("applianceNameLocator")));
         // Execute long press
@@ -93,6 +92,24 @@ public class Onboarding extends BaseTest{
 
         wait.until(ExpectedConditions.elementToBeClickable(deleteConfirmationButton))
             .click();
+        
+        // After clicking the delete confirmation, assert that the device list is empty
+        WebElement toolbarHeaderTxt = wait.until(ExpectedConditions.presenceOfElementLocated(AppiumBy.id(config.getProperty("toolbarHeaderTxtLocator"))));
+        System.out.println("Header text displayed: " + toolbarHeaderTxt.isDisplayed());
+        Assert.assertEquals(toolbarHeaderTxt.getText(), "Cihazlar");
+    }
+
+    /**
+     * Begins the device addition process by clicking add device
+     * 
+     */
+    private void beginAddDeviceFlow(){
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(15));
+
+        // Wait until "No Device Added" message is visiable
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath(config.getProperty("noDeviceAddedLocator"))));
+        // Initiate the process of adding a new device by clicking the "Add Device" button.
+        wait.until(ExpectedConditions.elementToBeClickable(AppiumBy.className(config.getProperty("addDeviceButtonLocator")))).click();
     }
 
     /**
@@ -104,7 +121,7 @@ public class Onboarding extends BaseTest{
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(15));
 
         // Wait for any transitional elements to disappear to ensure we are dealing with the current UI state.
-        wait.until(ExpectedConditions.invisibilityOfElementWithText(AppiumBy.id("noDeviceAddedLocator"), "Henüz cihaz eklemediniz."));
+        wait.until(ExpectedConditions.invisibilityOfElementWithText(By.xpath("noDeviceAddedLocator"), "Henüz cihaz eklemediniz."));
 
         // Check if the permission pop-up is displayed.
         boolean popUp = wait.until(ExpectedConditions.elementToBeClickable(AppiumBy.id(config.getProperty("allowButtonLocator")))).isDisplayed();
@@ -113,6 +130,64 @@ public class Onboarding extends BaseTest{
            wait.until(ExpectedConditions.elementToBeClickable(AppiumBy.id(config.getProperty("allowButtonLocator"))))
                 .click();
         }
+    }
+
+    /**
+     * Navigates through the device selection UI
+     * 
+     */
+    private void completeDeviceSelectionProcess(){
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(15));
+
+        // Proceed with the device addition process by selecting the type of device.
+        wait.until(ExpectedConditions.visibilityOfElementLocated(AppiumBy.id(config.getProperty("chooseHowYouProceedTxtLocator"))));
+        // Select "Kitchen Devices" and then "Fridge" from the available options
+        wait.until(ExpectedConditions.elementToBeClickable(AppiumBy.id(config.getProperty("kitchenDevicesLocator"))))
+            .click();
+        wait.until(ExpectedConditions.elementToBeClickable(AppiumBy.id(config.getProperty("fridgeLocator"))))
+            .click();
+    }
+
+    /**
+     * Enters the SKU number into the relevant input field and submits it to
+     * continue with the device addition process.
+     * 
+     */
+    private void enterAndSubmitSKUNumber(){
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(15));
+
+        // Enter the SKU number into the "SKU Pin Entry, then submit the form to proceed
+        wait.until(ExpectedConditions.visibilityOfElementLocated(AppiumBy.id(config.getProperty("applianceStockNumberTxtLocator"))));
+        wait.until(ExpectedConditions.elementToBeClickable(AppiumBy.id(config.getProperty("skuPinEntryLocator"))))
+            .sendKeys(config.getProperty("SKU"));
+        wait.until(ExpectedConditions.elementToBeClickable(AppiumBy.id(config.getProperty("useSkuPinButtonLocator"))))
+            .click();
+    }
+
+    /**
+     * Acknowledges the connection instructions provided in a pop-up
+     */
+    private void acknowledgeConnectionInstructions(){
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(15));
+
+        // Click the "Understood" or equivalent button to acknowledge the instructions.
+        wait.until(ExpectedConditions.elementToBeClickable(AppiumBy.id(config.getProperty("proceedButtonLocator"))))
+            .click();
+    }
+
+    /**
+     * Validates that the device has been put into the correct setup mode as indicated by
+     * the instruction on the screen.
+     * 
+     */
+    private void initiateConnectionSetup(){
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(15));
+
+        // Validate that the "Wireless button" is displayed, indicating readiness to connect
+        Assert.assertTrue(driver.findElement(AppiumBy.id(config.getProperty("wirelessBottonTxtLocator"))).isDisplayed());
+        // Click the "Next" button after the user has followed the instructions to put the device in setup mode.
+        wait.until(ExpectedConditions.elementToBeClickable(AppiumBy.id(config.getProperty("nextButtonLocator"))))
+            .click();
     }
 
     /**
@@ -128,40 +203,22 @@ public class Onboarding extends BaseTest{
             removeDevice();
         }
 
-        // Ensure elements are visible and clickable before interaction.
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(15));
-
-        // Wait until "No Device Added" message is visiable
-        wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath(config.getProperty("noDeviceAddedLocator"))));
-        // Initiate the process of adding a new device by clicking the "Add Device" button.
-        wait.until(ExpectedConditions.elementToBeClickable(AppiumBy.className(config.getProperty("addDeviceButtonLocator")))).click();
+        // Begin the process of adding a new device
+        beginAddDeviceFlow();
         
-        // Handle permission pop-up
+        // Handle the access the device's location request pop-up
         handlePermissionPopUp();
 
-        // Proceed with the device addition process by selecting the type of device.
-        wait.until(ExpectedConditions.visibilityOfElementLocated(AppiumBy.id(config.getProperty("chooseTheWayLocator"))));
-        // Select "Kitchen Devices" and then "Fridge" from the available options
-        wait.until(ExpectedConditions.elementToBeClickable(AppiumBy.id(config.getProperty("kitchenDevicesLocator"))))
-            .click();
-        wait.until(ExpectedConditions.elementToBeClickable(AppiumBy.id(config.getProperty("fridgeLocator"))))
-            .click();
+        // Continue with device type selection
+        completeDeviceSelectionProcess();
         
-        // Enter the SKU number into the "SKU Pin Entry, then submit the form to proceed
-        wait.until(ExpectedConditions.visibilityOfElementLocated(AppiumBy.id(config.getProperty("applianceStockNumberTxtLocator"))));
-        wait.until(ExpectedConditions.elementToBeClickable(AppiumBy.id(config.getProperty("skuPinEntryLocator"))))
-            .sendKeys(config.getProperty("SKU"));
-        wait.until(ExpectedConditions.elementToBeClickable(AppiumBy.id(config.getProperty("useSkuPinButtonLocator"))))
-            .click();
+        // Enter and submit the SKU number for the device
+        enterAndSubmitSKUNumber();
 
-        // Handle "instructions for onboarding" pop-up
-        wait.until(ExpectedConditions.elementToBeClickable(AppiumBy.id(config.getProperty("proceedButtonLocator"))))
-            .click();
+        // Acknowledge the connection instructions provided by the app
+        acknowledgeConnectionInstructions();
         
-        // Assertion: Check if the "Wireless" button text is displayed, indicating proceeding next page successfully
-        Assert.assertTrue(driver.findElement(AppiumBy.id(config.getProperty("wirelessBottonTxtLocator"))).isDisplayed());
-        // Continue with the next steps
-        wait.until(ExpectedConditions.elementToBeClickable(AppiumBy.id(config.getProperty("nextButtonLocator"))))
-            .click();
+        // Finalize the setup by initiating the connection process
+        initiateConnectionSetup();
     }
 }
