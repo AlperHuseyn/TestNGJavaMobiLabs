@@ -12,7 +12,7 @@ import org.testng.annotations.Test;
 
 import io.appium.java_client.AppiumBy;
 
-public class Fundamentals extends BaseTest{
+public class Onboarding extends BaseTest{
     ConfigReader config = new ConfigReader();
 
     /**
