@@ -43,10 +43,15 @@ public class Fundamentals extends BaseTest{
      * @return true if the element is present, false otherwise.
      */
     private boolean isDeviceAdded(){
+        // Ensure element is visible before interaction.
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(15));
+
         try{
-            driver.findElement(AppiumBy.id(config.getProperty("applianceNameLocator")));
+            wait.until(ExpectedConditions.visibilityOfElementLocated(AppiumBy.id(config.getProperty("applianceNameLocator"))));
+            System.out.println("Element located, returning TRUE");
             return true;  // Element is found, return true
         } catch (NoSuchElementException err) {
+            System.out.println("Element not located, returning FALSE");
             return false;  // Element not found, return false
         }
     }
@@ -55,12 +60,15 @@ public class Fundamentals extends BaseTest{
      * Removes a device by performing a long click gesture.
      */
     private void removeDevice(){
+        // Ensure element is visible and clickable before interaction.
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(15));
         // Locate the element
         WebElement element = driver.findElement(AppiumBy.id(config.getProperty("applianceNameLocator")));
         // Execute long press
         longPressAction(element);
         
-        // ...
+        wait.until(ExpectedConditions.elementToBeClickable(AppiumBy.id("removeDeviceButtonLocator")))
+            .click();
     }
 
     /**
@@ -73,9 +81,11 @@ public class Fundamentals extends BaseTest{
     public void addDevice(){
         // Check if a device is already added. If so, remove it.
         if(isDeviceAdded()){
+            System.out.println("We are inside the isAddedDevice if statement");
             removeDevice();
         }
 
+        // Ensure elements are visible and clickable before interaction.
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(15));
 
         // Wait until "No Device Added" message is visiable
