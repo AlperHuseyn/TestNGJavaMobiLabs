@@ -6,6 +6,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 
+import org.checkerframework.checker.nullness.qual.NonNull;
 import org.openqa.selenium.Capabilities;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebElement;
@@ -16,6 +17,7 @@ import org.testng.annotations.Test;
 
 import com.google.common.collect.ImmutableMap;
 
+import io.appium.java_client.AppiumBy;
 import io.appium.java_client.android.AndroidDriver;
 import io.appium.java_client.android.options.UiAutomator2Options;
 import io.appium.java_client.service.local.AppiumDriverLocalService;
@@ -99,9 +101,20 @@ public class BaseTest extends ConfigReader{
     }
 
     /**
+     * Scrolls to an element in the Android app that contains the specified text
+     * using the Appium's AndroidUIAutomator's `UiScrollable` class.
+     * 
+     * @param text The text of the element to scroll to. This is the visible text associated 
+     *             with a UI element in the app.
+     */
+    public void scrollTextIntoViewAction(@NonNull String text){
+        driver.findElement(AppiumBy.androidUIAutomator("new UiScrollable(new UiSelector()).scrollTextIntoView(new UiSelector().text('" + text + "'));"));
+    }
+
+    /**
      * Tears down the test environment.
      * 
-     * Waits for 3 seconds to complete any remaining operations, then quits the driver 
+     * Waits for 5 seconds to complete any remaining operations, then quits the driver 
      * and stops the Appium service. This ensures that the application and the server 
      * are properly shut down after tests.
      */
