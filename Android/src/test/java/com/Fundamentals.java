@@ -58,14 +58,19 @@ public class Fundamentals extends BaseTest{
      * Removes a device by performing a long click gesture.
      */
     private void removeDevice(){
-        // Ensure element is visible and clickable before interaction.
+        // Ensure elements are visible and clickable before interaction.
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(15));
         // Locate the element
         WebElement element = driver.findElement(AppiumBy.id(config.getProperty("applianceNameLocator")));
         // Execute long press
         longPressAction(element);
+
+        Assert.assertTrue(driver.findElement(AppiumBy.xpath("removeDeviceTxtLocator")).isDisplayed());
         
         wait.until(ExpectedConditions.elementToBeClickable(AppiumBy.id("removeDeviceButtonLocator")))
+            .click();
+        System.out.println("Remove button is clickable");
+        wait.until(ExpectedConditions.elementToBeClickable(AppiumBy.id("deleteButtonLocator")))
             .click();
     }
 
