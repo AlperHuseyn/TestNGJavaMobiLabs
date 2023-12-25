@@ -48,10 +48,8 @@ public class Fundamentals extends BaseTest{
 
         try{
             wait.until(ExpectedConditions.visibilityOfElementLocated(AppiumBy.id(config.getProperty("applianceNameLocator"))));
-            System.out.println("Element located, returning TRUE");
             return true;  // Element is found, return true
         } catch (NoSuchElementException err) {
-            System.out.println("Element not located, returning FALSE");
             return false;  // Element not found, return false
         }
     }
@@ -81,7 +79,6 @@ public class Fundamentals extends BaseTest{
     public void addDevice(){
         // Check if a device is already added. If so, remove it.
         if(isDeviceAdded()){
-            System.out.println("We are inside the isAddedDevice if statement");
             removeDevice();
         }
 
