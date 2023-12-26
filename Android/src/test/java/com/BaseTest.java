@@ -111,11 +111,11 @@ public class BaseTest extends ConfigReader{
         driver.findElement(AppiumBy.androidUIAutomator("new UiScrollable(new UiSelector()).scrollIntoView(text(\"" + text + "\"));"));
     }
 
-    public void swipeGestureAction(WebElement element, @NonNull String dir){
+    public void swipeGestureAction(WebElement element, @NonNull String direction){
         // Java
         ((JavascriptExecutor) driver).executeScript("mobile: swipeGesture", ImmutableMap.of(
             "elementId", ((RemoteWebElement) element).getId(),
-            "direction", dir,
+            "direction", direction,
             "percent", 0.75
         ));
     }
